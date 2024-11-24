@@ -1,0 +1,39 @@
+{
+  "data": {
+    "userId": 12,
+    "kind": {
+      "1": "Intensité",
+      "2": "Vitesse",
+      "3": "Force",
+      "4": "Endurance",
+      "5": "Énergie",
+      "6": "Cardio"
+    },
+    "data": [
+      {
+        "value": 90,
+        "kind": 6
+      },
+      {
+        "value": 200,
+        "kind": 5
+      },
+      {
+        "value": 50,
+        "kind": 4
+      },
+      {
+        "value": 140,
+        "kind": 3
+      },
+      {
+        "value": 120,
+        "kind": 2
+      },
+      {
+        "value": 80,
+        "kind": 1
+      }
+    ]
+  }
+}
