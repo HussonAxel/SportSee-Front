@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -9,97 +8,35 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useActivity } from "../../../hooks/useActivity";
+import { CustomTooltip, CustomLegend } from "../../ActivityChart/ActivityChart";
 
+interface ActivityChartProps {
+  isApi: boolean;
+  userId?: number;
+}
 
-import userActivity from "../../../mocks/userActivity.json";
+export default function ActivityChart({
+  isApi,
+  userId = 18,
+}: ActivityChartProps) {
+  const { data, isLoading, error } = useActivity(isApi, userId);
 
-import {
-  ActivityChartProps,
-  Session,
-  TooltipProps,
-  LegendProps,
-} from "./SimpleBarChartProps";
-
-
-
-export default function ActivityChart({ isApi }: ActivityChartProps) {
-  const [data, setData] = useState<
-    Array<{
-      name: number;
-      poids: number;
-      calories: number;
-    }>
-  >([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (isApi) {
-          const response = await fetch(
-            "http://localhost:3000/user/18/activity"
-          );
-          const result = await response.json();
-          const formattedData = formatSessionsData(result.data.sessions);
-          setData(formattedData);
-        } else {
-          const formattedData = formatSessionsData(userActivity.data.sessions);
-          setData(formattedData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setData([]);
-      }
-    };
-
-    fetchData();
-  }, [isApi]);
-
-  const formatSessionsData = (sessions: Session[]) => {
-    return sessions.map((session, index) => ({
-      name: index + 1,
-      poids: session.kilogram,
-      calories: session.calories,
-    }));
-  };
-
-  const CustomTooltip = ({ active, payload }: TooltipProps) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-red-500 p-2 text-white text-xs relative left-14">
-          <p className="mb-2">{`${payload[0].value}kg`}</p>
-          <p>{`${payload[1].value}kCal`}</p>  
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const CustomLegend = ({ payload }: LegendProps) => {
-    if (!payload) return null;
-
+  if (isLoading) {
     return (
-      <div className="flex justify-between gap-8 mb-8">
-        <h2 className="text-base font-medium mb-8 pl-8 pt-8">
-          Activité quotidienne
-        </h2>
-        <div className="flex flex-row gap-8">
-          {payload.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-sm text-gray-500">
-                {entry.value === "poids"
-                  ? "Poids (kg)"
-                  : "Calories brûlées (kCal)"}
-              </span>
-            </div>
-          ))}
-        </div>
+      <div className="bg-gray-50 rounded-lg 2xlm:w-full 2xl:max-w-[1200px] md:max-w-[800px] h-[320px] flex items-center justify-center">
+        <p>Chargement...</p>
       </div>
     );
-  };
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gray-50 rounded-lg 2xlm:w-full 2xl:max-w-[1200px] md:max-w-[800px] h-[320px] flex items-center justify-center">
+        <p>Une erreur est survenue</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 rounded-lg 2xlm:w-full 2xl:max-w-[1200px] md:max-w-[800px]">

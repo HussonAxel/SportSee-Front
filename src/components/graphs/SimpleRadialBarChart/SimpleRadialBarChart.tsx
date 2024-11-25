@@ -1,41 +1,29 @@
-import { useState, useEffect } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
-import UserInfos from "../../../mocks/userInfos.json";
+import { useScore } from "../../../hooks/useScore";
 
-interface SimpleRadialChartProps {
+interface ScoreChartProps {
   isApi: boolean;
+  userId?: number;
 }
 
-export default function SimpleRadialChart({ isApi }: SimpleRadialChartProps) {
-  const [data, setData] = useState<
-    Array<{
-      value: number;
-    }>
-  >([]);
+export default function ScoreChart({ isApi, userId = 18 }: ScoreChartProps) {
+  const { data, score, isLoading, error } = useScore(isApi, userId);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (isApi) {
-          const response = await fetch(
-            "http://localhost:3000/user/18"
-          );
-          const result = await response.json();
-          setData([{ value: result.data.score * 100 }]);
-        } else {
-          setData([{ value: UserInfos.data.todayScore * 100 }]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setData([]);
-      }
-    };
+  if (isLoading) {
+    return (
+      <div className="relative bg-gray-50 rounded-lg w-[258px] h-[263px] flex items-center justify-center">
+        <p>Chargement...</p>
+      </div>
+    );
+  }
 
-    fetchData();
-  }, [isApi]);
-
-  const score = data[0]?.value;
-
+  if (error) {
+    return (
+      <div className="relative bg-gray-50 rounded-lg w-[258px] h-[263px] flex items-center justify-center">
+        <p>Une erreur est survenue</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative bg-gray-50 rounded-lg w-[258px] h-[263px]">
@@ -46,7 +34,6 @@ export default function SimpleRadialChart({ isApi }: SimpleRadialChartProps) {
           de votre objectif
         </p>
       </div>
-
       <RadialBarChart
         width={258}
         height={263}

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Radar,
   RadarChart,
@@ -6,85 +5,34 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
 } from "recharts";
-import userPerformance from "../../../mocks/userPerformance.json";
+import { usePerformance } from "../../../hooks/usePerformance";
 
-const PERFORMANCE_MAPPING = {
-  1: "Intensité",
-  2: "Vitesse",
-  3: "Force",
-  4: "Endurance",
-  5: "Énergie",
-  6: "Cardio",
-};
-
-interface SimpleRadarChartProps {
+interface PerformanceChartProps {
   isApi: boolean;
+  userId?: number;
 }
 
-interface PerformanceData {
-  value: number;
-  kind: number;
-}
+export default function PerformanceChart({
+  isApi,
+  userId = 18,
+}: PerformanceChartProps) {
+  const { data, isLoading, error } = usePerformance(isApi, userId);
 
-interface UserPerformance {
-  data: {
-    data: PerformanceData[];
-    kind: { [key: number]: string };
-  };
-}
-
-export default function SimpleRadarChart({ isApi }: SimpleRadarChartProps) {
-  const [data, setData] = useState<Array<{ subject: string; value: number }>>(
-    []
-  );
-
-  const formatData = (userPerformance: UserPerformance) => {
-    const mappedData = userPerformance.data.data.map((item) => ({
-      subject:
-        PERFORMANCE_MAPPING[item.kind as keyof typeof PERFORMANCE_MAPPING],
-      value: item.value,
-    }));
-
-    const orderedSubjects = [
-      "Intensité",
-      "Vitesse",
-      "Force",
-      "Endurance",
-      "Énergie",
-      "Cardio",
-    ];
-    return orderedSubjects.map(
-      (subject) =>
-        mappedData.find((item) => item.subject === subject) || {
-          subject,
-          value: 0,
-        }
+  if (isLoading) {
+    return (
+      <div className="bg-gray-800 rounded-lg w-[258px] h-[263px] flex items-center justify-center">
+        <p className="text-white">Chargement...</p>
+      </div>
     );
-  };
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (isApi) {
-          const response = await fetch(
-            "http://localhost:3000/user/18/performance"
-          );
-          const result = await response.json();
-          const formattedData = formatData(result);
-          setData(formattedData);
-        } else {
-          // Using JSON data
-          const formattedData = formatData(userPerformance);
-          setData(formattedData);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setData([]);
-      }
-    };
-
-    fetchData();
-  }, [isApi]);
+  if (error) {
+    return (
+      <div className="bg-gray-800 rounded-lg w-[258px] h-[263px] flex items-center justify-center">
+        <p className="text-white">Une erreur est survenue</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-800 rounded-lg">
