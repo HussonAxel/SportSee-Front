@@ -4,13 +4,13 @@
 SportSee est une application de coaching sportif qui permet de visualiser ses données d'entraînement via un tableau de bord analytics. L'application est développée avec React, TypeScript et Vite, et utilise diverses bibliothèques pour offrir une expérience utilisateur optimale.
 
 ## Technologies Utilisées
-- **React 18** - Bibliothèque UI
+- **React 18** - Framework
 - **TypeScript** - Typage statique
 - **Vite** - Outil de build
 - **Tailwind CSS** - Framework CSS utilitaire
 - **Recharts** - Bibliothèque de visualisation de données
 - **React Router** - Gestion du routing
-- **Fetch API** - Appels API
+- **Axios** - Pour les appels API
 
 ## Prérequis
 - Node.js (version 14 ou supérieure)
@@ -26,64 +26,76 @@ git clone https://github.com/OpenClassrooms-Student-Center/P9-front-end-dashboar
 
 # Installer les dépendances
 cd P9-front-end-dashboard
-npm install
+yarn install
 
 # Démarrer le serveur backend
-npm run start
-```
-Le serveur backend sera accessible sur `http://localhost:3000`
-/!\ Attention, les appels API se basant sur le local, le fetch n'est pas dynamique. Si le serveur backend est ouvert sur un autre port, alors les données ne seront pas accessibles. /!\ 
+yarn dev
+
+Le serveur backend sera accessible sur `http://localhost:3000`. **Attention** : Les appels API se basent sur le local, le fetch n'est pas dynamique. Si le serveur backend est ouvert sur un autre port, alors les données ne seront pas accessibles.
 
 ### 2. Frontend
 ```bash
 # Cloner le repository frontend
-git clone [votre-repo-frontend]
+git clone https://github.com/HussonAxel/SportSee-Front
 
 # Installer les dépendances
-cd [nom-du-dossier]
+cd SportSee-Front
 npm install
 
 # Démarrer le serveur de développement
 npm run dev
 ```
-L'application sera accessible sur `http://localhost:5173`
+L'application sera accessible sur `http://localhost:5173`.
 
 ## Architecture du Projet
-
 ```
 src/
 ├── assets/              # Ressources statiques (images, icons)
 │   ├── static/         # Images et icônes
-│   └── svg/            # Composants SVG
 │
 ├── components/          # Composants React réutilisables
 │   ├── HeaderMenu/     # Menu principal
 │   ├── WelcomePanel/   # Panneau de bienvenue
-│   └── ...
+│   ├── graphs/         # Graphiques et visualisations
+│   └── 404             # Page d'erreur
 │
 ├── mocks/              # Données de test
-│   └── UserInfos.json  # Données utilisateur mocké
+│   ├── UserInfos.json  # Données utilisateur mockées
+│   ├── userActivity.json # Données d'activité mockées
+│   ├── userPerformance.json # Données de performance mockées
+│   └── userAverageSession.json # Données de sessions moyennes mockées
 │
 ├── services/           # Services et appels API
-│   └── apiCalls.ts    # Configuration des appels API
+│   └── api.ts          # Configuration des appels API
 │
 ├── types/              # Types TypeScript
 │   └── interfaces.ts   # Interfaces partagées
 │
-└── utils/              # Fonctions utilitaires
-    └── formatters.ts   # Formatage des données
+├── utils/              # Fonctions utilitaires
+│   └── isMocked.ts     # Formatage des données selon l'utilisation
+│
+├── hooks/              # Hooks personnalisés
+│   ├── useActivity.ts  # Hook pour récupérer les données d'activité
+│   ├── usePerformance.ts # Hook pour récupérer les données de performance
+│   ├── useScore.ts     # Hook pour récupérer le score de l'utilisateur
+│   └── useNutrition.ts  # Hook pour récupérer les données nutritionnelles
+│
+├── pages/              # Pages de l'application
+│   ├── Home/           # Page d'accueil
+│   └── 404/            # Page d'erreur
+│
+└── router/             # Configuration du routing
+    └── root.tsx        # Configuration des routes de l'application
 ```
 
 ## Fonctionnalités
-
 L'application offre deux modes de fonctionnement :
-1. **Mode API** : Données récupérées depuis le backend
-2. **Mode Mock** : Données de test locales
+1. **Mode API** : Données récupérées depuis le backend.
+2. **Mode Mock** : Données de test mockés via l'api.
 
 Pour basculer entre les deux modes, utilisez le toggle switch dans l'interface.
 
 ## Scripts Disponibles
-
 ```bash
 # Démarre le serveur de développement
 npm run dev
@@ -91,27 +103,18 @@ npm run dev
 # Build le projet
 npm run build
 
-# Lance les tests
-npm run test
-
-# Vérifie le typage TypeScript
-npm run type-check
-
 # Lint le code
 npm run lint
 ```
 
 ## Endpoints API
-
 L'API expose les endpoints suivants :
 - `GET /user/${userId}` - Informations utilisateur
 - `GET /user/${userId}/activity` - Données d'activité
 - `GET /user/${userId}/average-sessions` - Sessions moyennes
 - `GET /user/${userId}/performance` - Données de performance
 
-
 ## Documentation
-
 Pour plus d'informations sur les bibliothèques utilisées :
 - [React Documentation](https://reactjs.org/)
 - [TypeScript Documentation](https://www.typescriptlang.org/)
