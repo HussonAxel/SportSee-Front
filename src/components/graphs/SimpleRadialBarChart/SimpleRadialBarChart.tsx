@@ -28,9 +28,9 @@ export default function ScoreChart({ isApi, userId = 18 }: ScoreChartProps) {
   return (
     <div className="relative bg-gray-50 rounded-lg w-[258px] h-[263px]">
       <h2 className="absolute left-8 top-6 text-base font-medium">Score</h2>
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+      <div className="flex flex-col absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full w-[60%] h-[60%] items-center justify-center">
         <p className="text-4xl font-bold">{score}%</p>
-        <p className="text-base text-gray-500 max-w-[70px] mx-auto leading-5">
+        <p className="text-base text-gray-500 max-w-[70px] mx-auto leading-5 text-center">
           de votre objectif
         </p>
       </div>
@@ -53,7 +53,7 @@ export default function ScoreChart({ isApi, userId = 18 }: ScoreChartProps) {
           tick={false}
         />
         <RadialBar
-          background
+          background={{ fill: "transparent" }}
           dataKey="value"
           cornerRadius={10}
           fill="#FF0000"

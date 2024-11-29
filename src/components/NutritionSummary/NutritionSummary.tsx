@@ -57,7 +57,7 @@ const NutritionSummary = ({ isApi, userId = 18 }: NutritionSummaryProps) => {
 
   return (
     <aside className="">
-      <div className="flex flex-wrap justify-between gap-4 lg:gap-6 2xl:flex-col 2xl:w-full 2xl:max-w-[1200px] md:max-w-[800px]">
+      <div className="flex flex-wrap justify-between gap-4 lg:gap-6 2xl:flex-col 2xl:w-full 2xl:max-w-[1200px] md:max-w-[800px] h-full">
         {nutritionItems.map((item) => (
           <div
             key={item.id}
